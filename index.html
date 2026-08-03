@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MyCotiviti+ | Portal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/tabler-icons.min.css">
+<style>
+  :root{
+    /* --- Brand (MyCotiviti+ Design System) --- */
+    --purple:#31006F;        /* brand-900 */
+    --lavender:#9579D3;      /* brand-500 */
+    --pink:#5B4FF2;          /* Digital Purple */
+    --white:#FFFFFF;         /* neutral-0 */
+    --light-purple:#7C3AED;  /* brand-600 */
+    --light-violet:#C4B5FD;  /* brand-300 */
+    --light-pink:#EDE9FE;    /* brand-100 */
+    --brand-50:#F5F3FF;
+    --sky-blue:#0078AA;      /* accent-teal-700 */
+    --edifecs-blue:#14B8A6;  /* accent-teal-500 */
+    --edifecs-orange:#5EEAD4;/* accent-teal-300 */
+    --black:#0F172A;         /* neutral-900 */
+    --gray1:#475569;         /* neutral-600 */
+    --gray2:#64748B;         /* neutral-500 */
+    --gray3:#E2E8F0;         /* neutral-200 */
+    --gray4:#F1F5F9;         /* neutral-100 */
+    --radius:12px;
+
+    --success-bg:#ECFDF5; --success-text:#065F46; --success-border:#A7F3D0;
+    --error-bg:#FDF2F2;   --error-text:#9B1C1C;   --error-border:#F9C7C7;
+    --warning-bg:#FEFBF0; --warning-text:#713F12; --warning-border:#FDE9A8;
+    --info-bg:#F5F3FF;    --info-text:#5B21B6;    --info-border:#DCD3FB;
+
+    /* --- Neumorphic (soft-UI) shadow pair --- */
+    --neu-dark: rgba(163,177,198,0.55);
+    --neu-light: rgba(255,255,255,0.85);
+    --neu-dark-purple: rgba(45,38,140,0.38);
+    --neu-light-purple: rgba(255,255,255,0.35);
+    --brand-gradient: linear-gradient(135deg, var(--lavender), var(--light-violet));
+  }
+  *{box-sizing:border-box;}
+  input[type="checkbox"]{accent-color:var(--purple);}
+  body{
+    margin:0;
+    font-family:"Montserrat",Arial,sans-serif;
+    background:#F8FAFC;
+    color:var(--black);
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;}
+  .screen{display:none;}
+  .screen.active{display:block;}
+
+  /* ============ LOGIN SCREEN (Design 2 — simple) ============ */
+  #loginScreen{
+    min-height:100vh;
+    background:#F1F5F9;
+    padding:40px 32px;
+    position:relative;
+    overflow:hidden;
+  }
+  .simple-login-watermark{
+    position:absolute;right:60px;top:50%;transform:translateY(-50%);width:600px;height:auto;
+    color:#fff;opacity:0.6;pointer-events:none;z-index:0;
+  }
+  #loginScreen.active{display:block;}
+  .simple-login-topmark{display:flex;align-items:center;gap:8px;position:relative;z-index:1;}
+  .simple-login-topmark svg{height:26px;width:auto;display:block;}
+  .simple-login-wrap{
+    max-width:520px;
+    margin-top:140px;
+    position:relative;z-index:1;
+  }
+  .simple-login-heading{font-size:30px;font-weight:800;color:#31006f;margin:0 0 28px;line-height:1.25;white-space:nowrap;}
+  .simple-field{position:relative;margin-bottom:16px;}
+  .simple-field input{
+    width:100%;border:1.5px solid #CBD5E1;border-radius:999px;padding:13px 16px 13px 42px;
+    font-family:inherit;font-size:14.5px;color:var(--black);background:var(--white);
+  }
+  .simple-field input::placeholder{color:#94A3B8;}
+  .simple-field input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(91,79,229,0.14);}
+  .simple-field i{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--gray2);font-size:15px;}
+  .simple-field-eye{position:absolute;right:16px;left:auto;cursor:pointer;}
+  .btn-simple-continue{
+    width:100%;background:var(--pink);color:var(--white);border:none;font-weight:700;font-size:14.5px;
+    padding:14px;border-radius:999px;cursor:pointer;margin-top:14px;
+    transition:background .15s ease, transform .15s ease;
+  }
+  .btn-simple-continue:hover{background:#4A3FCC;}
+  .btn-simple-continue:active{transform:translateY(1px);}
+  .simple-login-foot{font-size:13px;color:var(--gray1);margin-top:26px;}
+  .simple-login-foot a{color:var(--pink);font-weight:700;}
+
+  /* ============ TICKETING SCREEN ============ */
+  .topbar{
+    background:var(--white);border-bottom:1px solid var(--gray3);
+    padding:14px 32px;display:flex;align-items:center;justify-content:space-between;
+    position:sticky;top:0;z-index:5;
+  }
+  .topbar-left{display:flex;align-items:center;gap:10px;}
+  .topbar-mark{width:32px;height:32px;border-radius:9px;background:var(--light-pink);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:15px;}
+  .topbar-word{font-size:15px;font-weight:800;color:var(--black);}
+  .topbar-word span{color:var(--pink);}
+  /* ============ TOP ALERT BANNER ============ */
+  .top-alert-banner{
+    position:sticky;top:0;z-index:30;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:9px 20px;font-size:12.5px;font-weight:700;text-align:center;color:var(--white);
+  }
+  .top-alert-banner.critical{background:#1C1C22;}
+  .top-alert-banner.critical span{
+    background:linear-gradient(90deg,#FFC24B,#FF8A00);
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;-webkit-text-fill-color:transparent;
+    font-weight:700;
+  }
+  .top-alert-banner.critical i{color:#FF9F0A;}
+  .top-alert-banner.warning{background:linear-gradient(90deg,#B45309,#D97706);}
+  .top-alert-banner.info{background:linear-gradient(90deg,var(--purple),#4C2A8F);}
+  .top-alert-banner i{font-size:14px;flex-shrink:0;}
+  .top-alert-banner .banner-close{background:none;border:none;color:rgba(255,255,255,0.85);cursor:pointer;font-size:15px;margin-left:6px;flex-shrink:0;}
+  .top-alert-banner .banner-action{
+    background:transparent;color:#FFA733;font-weight:700;font-size:11px;
+    padding:5px 13px;border-radius:20px;border:1.5px solid #FFA733;cursor:pointer;margin-left:4px;flex-shrink:0;white-space:nowrap;
+    transition:background .15s ease, transform .15s ease;
+  }
+  .top-alert-banner .banner-action:hover{background:rgba(255,167,51,0.14);}
+  .top-alert-banner .banner-action:active{transform:translateY(1px);}
+
+  .topbar{top:0;}
+  body:has(.top-alert-banner) .topbar{top:37px;}
+
+  .topbar-nav{display:flex;gap:4px;background:var(--gray4);border-radius:10px;padding:3px;}
+  .topbar-nav a{font-size:13px;font-weight:700;color:var(--gray1);padding:8px 16px;border-radius:8px;display:flex;align-items:center;gap:6px;}
+  .topbar-nav a.active{background:var(--white);color:var(--purple);box-shadow:0 1px 2px rgba(15,23,42,0.08);}
+  .topbar-right{display:flex;align-items:center;gap:14px;}
+  .avatar{width:34px;height:34px;border-radius:50%;background:var(--lavender);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;box-shadow:4px 4px 9px rgba(149,121,211,0.4), -4px -4px 9px rgba(255,255,255,0.6), inset 0 1px 1px rgba(255,255,255,0.35);}
+  .user-chip{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:var(--black);}
+  .user-chip i{color:var(--gray2);font-size:15px;}
+
+  .content{max-width:1180px;margin:0 auto;padding:26px 32px 70px;}
+
+  .banner{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 16px;border-radius:10px;border:1px solid;font-size:13.5px;font-weight:600;margin-bottom:12px;}
+  .banner i:first-child{margin-right:8px;}
+  .banner.critical{background:var(--error-bg);border-color:var(--error-border);color:var(--error-text);}
+  .banner.warning{background:var(--warning-bg);border-color:var(--warning-border);color:var(--warning-text);}
+  .banner.info{background:var(--info-bg);border-color:var(--info-border);color:var(--info-text);}
+  .banner-tag{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;background:rgba(255,255,255,0.6);padding:3px 8px;border-radius:20px;}
+  .banner-close{cursor:pointer;font-size:16px;background:none;border:none;color:inherit;}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:20px 0 30px;}
+  .stat-card{position:relative;background:var(--white);border:1px solid var(--gray3);border-radius:var(--radius);padding:18px 20px;box-shadow:0 1px 3px rgba(15,23,42,0.05), 0 1px 2px rgba(15,23,42,0.04);transition:box-shadow .2s ease;overflow:hidden;}
+  .stat-icon{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg, var(--light-pink), var(--light-violet));color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:10px;}
+  .stat-icon svg{width:16px;height:16px;}
+  .stat-card::before{
+    content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;
+    background:var(--brand-gradient);
+    -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    opacity:0;transition:opacity .2s ease;pointer-events:none;
+  }
+  .stat-card:hover{box-shadow:0 6px 18px rgba(91,79,229,0.14);}
+  .stat-card:hover::before{opacity:1;}
+  .stat-label{font-size:12.5px;color:var(--gray1);font-weight:600;margin:0 0 10px;}
+  .stat-value-row{display:flex;align-items:baseline;gap:10px;}
+  .stat-value{
+    font-size:42px;font-weight:800;line-height:1;
+    color:var(--pink);
+  }
+  .stat-trend{font-size:12.5px;font-weight:700;color:var(--purple);display:inline-flex;align-items:center;gap:2px;}
+  .stat-sub{font-size:11.5px;color:var(--gray2);margin-top:4px;}
+
+  .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .section-head h2{font-size:20px;font-weight:800;margin:0;color:var(--black);}
+  .btn-primary{
+    background:var(--pink);color:var(--white);border:none;font-weight:700;
+    font-size:13.5px;padding:11px 18px;border-radius:999px;display:flex;align-items:center;gap:7px;cursor:pointer;
+    box-shadow:5px 5px 12px var(--neu-dark-purple), -5px -5px 12px var(--neu-light-purple), inset 0 1px 1px rgba(255,255,255,0.35);
+    transition:box-shadow .15s ease, transform .15s ease;
+  }
+  .btn-primary:active{box-shadow:inset 3px 3px 7px var(--neu-dark-purple), inset -3px -3px 7px var(--neu-light-purple);transform:translateY(1px);}
+  .btn-primary:hover{background:#4A3FCC;}
+  .btn-secondary{
+    background:var(--light-pink);color:var(--purple);border:none;font-weight:700;
+    font-size:13px;padding:9px 15px;border-radius:999px;display:flex;align-items:center;gap:6px;cursor:pointer;
+    box-shadow:4px 4px 10px var(--neu-dark-purple), -4px -4px 10px var(--neu-light-purple);
+    transition:box-shadow .15s ease, transform .15s ease, background .15s ease;
+  }
+  .btn-secondary:hover{background:var(--light-violet);}
+  .btn-secondary:active{box-shadow:inset 2px 2px 6px var(--neu-dark), inset -2px -2px 6px var(--neu-light);transform:translateY(1px);}
+  .btn-outline{
+    background:transparent;color:var(--purple);border:1.5px solid var(--gray3);font-weight:700;
+    font-size:13px;padding:9px 15px;border-radius:999px;display:flex;align-items:center;gap:6px;cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .btn-outline:hover{border-color:var(--lavender);background:var(--brand-50);}
+  .btn-outline:active{transform:translateY(1px);}
+  .btn-ghost{
+    background:none;color:var(--purple);border:none;font-weight:700;
+    font-size:13px;padding:9px 6px;display:flex;align-items:center;gap:6px;cursor:pointer;
+    transition:opacity .15s ease;
+  }
+  .btn-ghost:hover{opacity:0.7;}
+  .btn-ghost:active{transform:translateY(1px);}
+  .bulk-actions-bar{
+    display:none;align-items:center;justify-content:space-between;
+    background:var(--light-pink);border:1px solid var(--light-violet);border-radius:10px;
+    padding:10px 16px;margin-bottom:14px;font-size:13px;font-weight:700;color:var(--purple);
+  }
+
+  .panel{position:relative;background:var(--white);border:1px solid var(--gray3);border-radius:var(--radius);padding:20px 22px;margin-bottom:20px;}
+  .filter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .filter-field label{display:block;font-size:12px;font-weight:700;color:var(--gray1);margin-bottom:7px;}
+  .filter-field select{
+    width:100%;border:1px solid var(--gray3);border-radius:9px;padding:10px 40px 10px 14px;
+    font-family:inherit;font-size:13.5px;color:var(--black);background:var(--white);
+    appearance:none;-webkit-appearance:none;-moz-appearance:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'></polyline></svg>");
+    background-repeat:no-repeat;background-position:right 14px center;background-size:16px;
+  }
+  .filter-field select:focus{outline:none;border-color:var(--gray2);box-shadow:0 0 0 3px rgba(91,79,229,0.14);}
+  .search-input-wrap{position:relative;}
+  .search-input-wrap .search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--gray2);pointer-events:none;}
+  .search-input-wrap input{
+    width:100%;border:1px solid var(--gray3);border-radius:9px;padding:10px 14px 10px 38px;
+    font-family:inherit;font-size:13.5px;color:var(--black);background:var(--white);
+    transition:box-shadow .15s ease, border-color .15s ease;
+  }
+  .search-input-wrap input::placeholder{color:var(--gray2);}
+  .search-input-wrap input:focus{outline:none;border-color:var(--gray2);box-shadow:0 0 0 3px rgba(91,79,229,0.14);}
+
+  /* ============ CUSTOM DROPDOWN ============ */
+  .custom-select{position:relative;}
+  .custom-select-trigger{
+    width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;
+    border:1px solid var(--gray3);border-radius:9px;padding:10px 14px;
+    font-family:inherit;font-size:13.5px;color:var(--black);background:var(--white);
+    cursor:pointer;transition:box-shadow .15s ease, border-color .15s ease;
+  }
+  .custom-select-trigger:hover{border-color:var(--gray2);}
+  .custom-select-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
+  .custom-select-trigger i{font-size:15px;color:var(--gray1);flex-shrink:0;transition:transform .15s ease;}
+  .custom-select.open .custom-select-trigger{border-color:var(--gray2);box-shadow:0 0 0 3px rgba(91,79,229,0.14);}
+  .custom-select.open .custom-select-trigger i{transform:rotate(180deg);}
+  .custom-select-menu{
+    position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:40;
+    background:var(--white);border:1px solid var(--gray3);border-radius:10px;
+    box-shadow:0 14px 32px rgba(15,23,42,0.14);
+    padding:6px;margin:0;list-style:none;max-height:260px;overflow-y:auto;
+    opacity:0;visibility:hidden;transform:translateY(-4px);
+    transition:opacity .15s ease, transform .15s ease, visibility .15s;
+  }
+  .custom-select.open .custom-select-menu{opacity:1;visibility:visible;transform:translateY(0);}
+  .custom-select-menu li{
+    padding:9px 12px;border-radius:7px;font-size:13.5px;color:var(--black);cursor:pointer;
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+  }
+  .custom-select-menu li:hover{background:var(--brand-50);}
+  .custom-select-menu li.active{background:var(--light-pink);color:var(--purple);font-weight:700;}
+  .custom-select-menu li.active::after{content:"\2713";font-size:12px;}
+
+  .ticket-table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  .ticket-table th{
+    text-align:left;font-size:11.5px;color:var(--gray1);text-transform:uppercase;letter-spacing:.04em;
+    font-weight:700;padding:0 12px 10px;border-bottom:1px solid var(--gray3);
+  }
+  .ticket-table th:first-child,.ticket-table td:first-child{width:1%;white-space:nowrap;}
+  .ticket-table td{padding:14px 12px;border-bottom:1px solid var(--gray4);vertical-align:top;}
+  .ticket-table tr:last-child td{border-bottom:none;}
+  .ticket-id{color:var(--pink);font-weight:700;white-space:nowrap;}
+  .ticket-summary{font-weight:600;color:var(--black);margin:0 0 2px;max-width:260px;}
+  .ticket-table td:nth-child(5),.ticket-table td:nth-child(6),.ticket-table td:nth-child(7){white-space:nowrap;}
+  .ticket-type{font-size:11.5px;color:var(--gray2);}
+  .status-pill{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:20px;border:1px solid;white-space:nowrap;}
+  .status-pill .g-o{width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .status-pill.open{background:var(--info-bg);color:var(--info-text);border-color:var(--info-border);}
+  .status-pill.progress{background:var(--warning-bg);color:var(--warning-text);border-color:var(--warning-border);}
+  .status-pill.review{background:var(--light-pink);color:var(--purple);border-color:var(--light-violet);}
+  .status-pill.closed{background:var(--success-bg);color:var(--success-text);border-color:var(--success-border);}
+
+  .table-foot{display:flex;justify-content:space-between;align-items:center;padding-top:16px;font-size:12.5px;color:var(--gray1);}
+  .pager{display:flex;gap:4px;}
+  .pager button{width:30px;height:30px;border-radius:50%;border:none;background:var(--white);color:var(--gray1);cursor:pointer;font-size:12px;box-shadow:3px 3px 7px var(--neu-dark), -3px -3px 7px var(--neu-light);transition:box-shadow .15s ease;}
+  .pager button.current{background:var(--purple);color:var(--white);font-weight:700;box-shadow:inset 2px 2px 5px rgba(0,0,0,0.3), inset -2px -2px 5px rgba(255,255,255,0.15);}
+
+  .chat-widget{position:fixed;bottom:26px;right:30px;z-index:20;display:flex;flex-direction:column;align-items:flex-end;}
+
+  .chat-toggle{
+    background:var(--white);color:var(--purple);border:1.5px solid var(--gray3);
+    font-size:13.5px;font-weight:700;padding:13px 20px;
+    border-radius:30px 30px 4px 30px;
+    display:flex;align-items:center;gap:10px;cursor:pointer;
+    box-shadow:0 8px 20px rgba(15,23,42,0.10);
+    transition:box-shadow .15s ease, transform .15s ease, border-color .15s ease;
+  }
+  .chat-toggle:hover{border-color:var(--lavender);box-shadow:0 10px 24px rgba(91,79,229,0.16);}
+  .chat-toggle:active{transform:translateY(1px);}
+  .chat-toggle-mark{width:48px;height:48px;border-radius:12px;background:var(--light-pink);color:var(--purple);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .chat-toggle-mark svg{width:60%;height:60%;}
+  .chat-toggle i{font-size:15px;color:var(--pink);transition:transform .2s ease;}
+  .chat-widget.open .chat-toggle i{transform:rotate(180deg);}
+
+  .chat-panel{
+    width:340px;max-height:0;opacity:0;overflow:hidden;pointer-events:none;
+    background:var(--white);border:1px solid var(--gray3);border-radius:16px 16px 4px 16px;
+    box-shadow:0 16px 40px rgba(49,0,111,0.18);
+    margin-bottom:0;
+    transition:max-height .25s ease, opacity .2s ease, margin-bottom .25s ease;
+  }
+  .chat-widget.open .chat-panel{max-height:380px;opacity:1;margin-bottom:10px;pointer-events:auto;}
+  .chat-panel-head{background:linear-gradient(100deg, #0B0714 0%, var(--purple) 16%, #4C2A8F 100%);color:var(--white);padding:16px 18px;display:flex;align-items:center;gap:10px;border-radius:15px 15px 0 0;}
+  .chat-panel-mark{width:52px;height:52px;border-radius:13px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .chat-panel-mark svg{width:58%;height:58%;}
+  .chat-panel-title{font-size:13.5px;font-weight:800;}
+  .chat-panel-sub{font-size:12.5px;color:rgba(255,255,255,0.8);margin-top:2px;}
+  .chat-panel-body{padding:16px 18px;min-height:150px;}
+  .chat-bubble{background:var(--brand-50);color:var(--black);border-radius:12px 12px 12px 4px;padding:10px 13px;font-size:12.5px;line-height:1.5;max-width:88%;}
+  .chat-panel-input{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--gray4);}
+  .chat-panel-input input{flex:1;min-width:0;border:1px solid var(--gray3);border-radius:20px;padding:9px 13px;font-family:inherit;font-size:12.5px;color:var(--black);}
+  .chat-send{width:34px;height:34px;border-radius:50%;background:var(--pink);color:var(--white);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
+  footer.page-footer{max-width:1180px;margin:0 auto;padding:10px 32px 40px;font-size:11.5px;color:var(--gray2);}
+
+  /* ============ APP HEALTH STATUS PILLS ============ */
+  .health-status{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:20px;border:1px solid;white-space:nowrap;flex-shrink:0;}
+  .health-status.operational{background:var(--success-bg);color:var(--success-text);border-color:var(--success-border);}
+  .health-status.degraded{background:var(--warning-bg);color:var(--warning-text);border-color:var(--warning-border);}
+  .health-status.maintenance{background:var(--info-bg);color:var(--info-text);border-color:var(--info-border);}
+  .health-status.outage{background:var(--error-bg);color:var(--error-text);border-color:var(--error-border);}
+
+  @media (max-width:820px){
+    .login-wrap{flex-direction:column;}
+    .stat-grid,.filter-grid{grid-template-columns:1fr;}
+    .ticket-table{display:block;overflow-x:auto;}
+  }
+</style>
+</head>
+<body>
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <symbol id="cotiviti-mark" viewBox="0 0 55.65 65.49">
+    <path d="M43.18,19.67c.11.09.22.2.33.3l.77.68,11.37-11.26-2.99-2.64-9.75,12.69.27.24h0Z"/><path d="M39.69,17.5c.53.25,1.06.53,1.57.83l8.53-13.52-3.51-1.9-6.63,14.56.05.03h0Z"/><path d="M43.04,1.69l-3.85-1.06-3.17,15.64c.6.12,1.19.29,1.77.48,0,0,5.25-15.06,5.25-15.06Z"/><path d="M32.21,15.93c.61-.01,1.23,0,1.84.05L35.76.16l-3.99-.16.44,15.92h0Z"/><path d="M24.4,1.07l4.01,15.38c.6-.15,1.2-.27,1.81-.36L28.32.32l-3.92.74h0Z"/><path d="M26.51,17.05l-5.39-14.89-3.65,1.61,7.35,14.03c.55-.29,1.12-.53,1.69-.75Z"/><path d="M23.1,18.83L14.5,5.57l-3.19,2.39,10.32,12c.48-.41.96-.79,1.47-1.13Z"/><path d="M20.2,21.35l-11.36-10.97-2.57,3.05,12.74,9.35c.36-.49.76-.97,1.18-1.43h0Z"/><path d="M17.92,24.46l-13.51-8.11-1.82,3.55,14.5,6.22c.24-.57.52-1.12.83-1.67Z"/><path d="M16.39,28.01L1.43,23.17l-.97,3.87,15.51,2.79c.11-.61.24-1.22.42-1.82Z"/><path d="M15.75,31.82L.07,30.48l-.07,3.99,15.75-.78c-.03-.62-.03-1.24,0-1.86h0Z"/><path d="M15.97,35.68L.4,37.91l.83,3.9,15.15-4.31c-.17-.6-.31-1.21-.41-1.82Z"/><path d="M17.06,39.39l-14.67,5.69,1.69,3.61,13.81-7.63c-.31-.54-.59-1.1-.83-1.67Z"/><path d="M18.98,42.74l-13.03,8.87,2.46,3.14,11.75-10.57c-.42-.46-.82-.94-1.18-1.44Z"/><path d="M21.59,45.58l-10.71,11.59,3.11,2.5,9.07-12.96c-.51-.35-.99-.73-1.47-1.14h0Z"/><path d="M24.77,47.75l-7.82,13.72,3.59,1.74,5.92-14.7c-.57-.22-1.14-.47-1.69-.76Z"/><path d="M23.83,64.29l3.89.88,2.46-15.7c-.61-.09-1.21-.21-1.81-.36,0,0-4.54,15.18-4.54,15.18Z"/><path d="M32.17,49.64l-1,15.85,3.99-.02-1.15-15.88c-.61.05-1.23.06-1.84.05Z"/><path d="M35.99,49.31l2.61,15.69,3.88-.92-4.71-15.25c-.59.19-1.18.35-1.78.47h0Z"/><path d="M41.2,47.27c-.52.31-1.04.59-1.58.83l6.1,14.74,3.58-1.77-8.05-13.83-.04.02h0Z"/><polygon points="43.79 45.37 42.87 46.12 42.88 46.13 52.16 59.15 55.25 56.62 44.29 44.96 43.79 45.37"/><path d="M42.84,46.14h0c.31-.23.61-.49.91-.76l-.92.76h0Z"/><path d="M17.85,41.07c-.15-.26-.29-.53-.42-.8.13.27.27.54.42.8h0Z"/><path d="M20.12,44.19c-.42-.46-.82-.94-1.18-1.44h0c.36.5.76.98,1.18,1.45h0Z"/><path d="M23.03,46.73c-.51-.35-.99-.73-1.47-1.14h0c.47.42.96.8,1.47,1.15h0Z"/><path d="M26.43,48.53c-.57-.22-1.14-.47-1.69-.76v.02c.54.29,1.11.54,1.68.76v-.02h.01Z"/><path d="M30.15,49.5c-.61-.09-1.21-.21-1.81-.36v.03c.59.16,1.2.28,1.81.36v-.03Z"/><path d="M33.98,49.65v-.03c-.62.05-1.23.06-1.85.05v.03c.61.02,1.23,0,1.85-.05Z"/><path d="M37.73,48.86c-.59.19-1.18.35-1.78.48v.03c.61-.12,1.2-.29,1.79-.48v-.03h-.01Z"/><path d="M41.2,47.27l-.04.02c-.52.31-1.04.59-1.58.83v.03c.57-.25,1.11-.54,1.64-.86l-.02-.03h0Z"/><path d="M44.25,44.98l-.5.41c-.3.27-.6.53-.91.77l.02.03c.48-.37.94-.77,1.39-1.2h0Z"/><path d="M43.15,19.63c.11.09.22.2.33.3l.14.12s.02.02.04.03l.6.53,7.49-7.44c-.79-.77-1.61-1.48-2.46-2.14l-6.41,8.36s.27.24.27.24Z"/><path d="M39.66,17.46c.12.06.24.13.36.19.28.14.55.29.82.44.13.07.26.13.38.2l5.63-8.95c-.93-.57-1.89-1.09-2.87-1.54l-4.38,9.63.05.03h0Z"/><path d="M37.76,16.71l3.47-9.99c-1.04-.34-2.09-.63-3.15-.85l-2.09,10.35c.6.12,1.19.29,1.77.48h0Z"/><path d="M34.02,15.94l1.13-10.5c-1.08-.1-2.17-.13-3.26-.11l.29,10.56c.61-.01,1.23,0,1.84.05Z"/><path d="M29.1,16.27c.15-.03.3-.06.45-.09.21-.04.43-.1.64-.13l-1.26-10.49c-1.08.14-2.15.35-3.21.62l2.66,10.23c.24-.06.48-.09.72-.14Z"/><path d="M26.48,17.01l-3.59-9.93c-1.02.38-2.02.82-2.99,1.33l4.89,9.35c.55-.29,1.12-.53,1.69-.75Z"/><path d="M22.49,19.24s.03-.03.05-.04c.18-.13.35-.28.53-.41l-5.73-8.86c-.9.6-1.77,1.27-2.61,1.99l6.87,8.01c.29-.25.59-.46.9-.69h-.01Z"/><path d="M19.31,22.35c.13-.16.26-.31.39-.47.16-.18.3-.38.46-.56l-7.58-7.34c-.76.81-1.47,1.65-2.11,2.52l8.51,6.26c.1-.14.23-.27.33-.41Z"/><path d="M17.45,25.31c.08-.17.16-.34.25-.51.06-.12.11-.25.18-.36l-9.05-5.44c-.56.96-1.04,1.94-1.47,2.94l9.69,4.17c.12-.27.27-.53.4-.8Z"/><path d="M16.36,27.99l-10.03-3.25c-.32,1.05-.58,2.12-.77,3.2l10.38,1.87c.11-.61.24-1.22.42-1.82Z"/><path d="M15.71,33.42c-.02-.42-.01-.84,0-1.26v-.35l-10.52-.9c-.08,1.1-.09,2.2-.04,3.3l10.56-.53v-.27h0Z"/><path d="M16.04,36.23c-.02-.12-.05-.24-.07-.36-.01-.06-.03-.13-.04-.19l-10.46,1.5c.17,1.08.41,2.16.71,3.22l10.16-2.9c-.12-.42-.22-.85-.3-1.27Z"/><path d="M17.43,40.27c-.14-.29-.28-.58-.4-.87l-9.86,3.83c.41,1.01.89,2,1.43,2.97l9.25-5.13c-.15-.26-.29-.53-.42-.8Z"/><path d="M18.94,42.76l-8.75,5.97c.63.89,1.31,1.75,2.06,2.57l7.87-7.09c-.42-.46-.82-.94-1.18-1.44h0Z"/><path d="M21.55,45.6l-7.18,7.79c.83.74,1.69,1.41,2.59,2.03l6.06-8.68c-.51-.35-.99-.73-1.47-1.14Z"/><path d="M24.73,47.79l-5.23,9.2c.97.53,1.96.99,2.98,1.39l3.95-9.83c-.57-.22-1.14-.47-1.69-.76h-.01Z"/><path d="M28.33,49.16l-3.03,10.16c1.06.29,2.13.52,3.21.68l1.64-10.48c-.61-.09-1.22-.21-1.82-.36Z"/><path d="M32.14,49.7l-.67,10.58c1.09.04,2.19.02,3.27-.07l-.76-10.56c-.61.05-1.23.06-1.85.05h0Z"/><path d="M35.96,49.37l1.73,10.45c1.07-.2,2.13-.48,3.17-.81l-3.12-10.12c-.59.19-1.18.35-1.78.48Z"/><path d="M39.59,48.16l4.04,9.8c.99-.44,1.96-.93,2.91-1.49l-5.33-9.17c-.53.32-1.07.6-1.63.86h0Z"/><path d="M44.25,44.98c-.45.43-.91.83-1.39,1.2l6.14,8.63c.86-.65,1.69-1.35,2.49-2.12,0,0-7.24-7.71-7.24-7.71Z"/>
+  </symbol>
+</svg>
+
+<!-- ============ LOGIN SCREEN ============ -->
+<div class="screen active" id="loginScreen">
+  <svg class="simple-login-watermark" viewBox="0 0 55.65 65.49" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <style>
+        .wmk1 { fill: currentColor; }
+        .wmk2 { mix-blend-mode: darken; opacity: .45; }
+      </style>
+    </defs>
+    <g>
+      <g>
+        <path class="wmk1" d="M43.18,19.67c.11.09.22.2.33.3l.77.68,11.37-11.26-2.99-2.64-9.75,12.69.27.24h0Z"/>
+        <path class="wmk1" d="M39.69,17.5c.53.25,1.06.53,1.57.83l8.53-13.52-3.51-1.9-6.63,14.56.05.03h0Z"/>
+        <path class="wmk1" d="M43.04,1.69l-3.85-1.06-3.17,15.64c.6.12,1.19.29,1.77.48,0,0,5.25-15.06,5.25-15.06Z"/>
+        <path class="wmk1" d="M32.21,15.93c.61-.01,1.23,0,1.84.05L35.76.16l-3.99-.16.44,15.92h0Z"/>
+        <path class="wmk1" d="M24.4,1.07l4.01,15.38c.6-.15,1.2-.27,1.81-.36L28.32.32l-3.92.74h0Z"/>
+        <path class="wmk1" d="M26.51,17.05l-5.39-14.89-3.65,1.61,7.35,14.03c.55-.29,1.12-.53,1.69-.75Z"/>
+        <path class="wmk1" d="M23.1,18.83L14.5,5.57l-3.19,2.39,10.32,12c.48-.41.96-.79,1.47-1.13Z"/>
+        <path class="wmk1" d="M20.2,21.35l-11.36-10.97-2.57,3.05,12.74,9.35c.36-.49.76-.97,1.18-1.43h0Z"/>
+        <path class="wmk1" d="M17.92,24.46l-13.51-8.11-1.82,3.55,14.5,6.22c.24-.57.52-1.12.83-1.67h0Z"/>
+        <path class="wmk1" d="M16.39,28.01L1.43,23.17l-.97,3.87,15.51,2.79c.11-.61.24-1.22.42-1.82Z"/>
+        <path class="wmk1" d="M15.75,31.82L.07,30.48l-.07,3.99,15.75-.78c-.03-.62-.03-1.24,0-1.86h0Z"/>
+        <path class="wmk1" d="M15.97,35.68L.4,37.91l.83,3.9,15.15-4.31c-.17-.6-.31-1.21-.41-1.82Z"/>
+        <path class="wmk1" d="M17.06,39.39l-14.67,5.69,1.69,3.61,13.81-7.63c-.31-.54-.59-1.1-.83-1.67Z"/>
+        <path class="wmk1" d="M18.98,42.74l-13.03,8.87,2.46,3.14,11.75-10.57c-.42-.46-.82-.94-1.18-1.44Z"/>
+        <path class="wmk1" d="M21.59,45.58l-10.71,11.59,3.11,2.5,9.07-12.96c-.51-.35-.99-.73-1.47-1.14h0Z"/>
+        <path class="wmk1" d="M24.77,47.75l-7.82,13.72,3.59,1.74,5.92-14.7c-.57-.22-1.14-.47-1.69-.76Z"/>
+        <path class="wmk1" d="M23.83,64.29l3.89.88,2.46-15.7c-.61-.09-1.21-.21-1.81-.36,0,0-4.54,15.18-4.54,15.18Z"/>
+        <path class="wmk1" d="M32.17,49.64l-1,15.85,3.99-.02-1.15-15.88c-.61.05-1.23.06-1.84.05Z"/>
+        <path class="wmk1" d="M35.99,49.31l2.61,15.69,3.88-.92-4.71-15.25c-.59.19-1.18.35-1.78.47h0Z"/>
+        <path class="wmk1" d="M41.2,47.27c-.52.31-1.04.59-1.58.83l6.1,14.74,3.58-1.77-8.05-13.83-.04.02h0Z"/>
+        <polygon class="wmk1" points="43.79 45.37 42.87 46.12 42.88 46.13 52.16 59.15 55.25 56.62 44.29 44.96 43.79 45.37"/>
+      </g>
+      <g class="wmk2">
+        <path class="wmk1" d="M42.84,46.14h0c.31-.23.61-.49.91-.76l-.92.76h0Z"/>
+        <path class="wmk1" d="M17.85,41.07c-.15-.26-.29-.53-.42-.8.13.27.27.54.42.8h0Z"/>
+        <path class="wmk1" d="M20.12,44.19c-.42-.46-.82-.94-1.18-1.44h0c.36.5.76.98,1.18,1.45h0Z"/>
+        <path class="wmk1" d="M23.03,46.73c-.51-.35-.99-.73-1.47-1.14h0c.47.42.96.8,1.47,1.15h0Z"/>
+        <path class="wmk1" d="M26.43,48.53c-.57-.22-1.14-.47-1.69-.76v.02c.54.29,1.11.54,1.68.76v-.02h.01Z"/>
+        <path class="wmk1" d="M30.15,49.5c-.61-.09-1.21-.21-1.81-.36v.03c.59.16,1.2.28,1.81.36v-.03Z"/>
+        <path class="wmk1" d="M33.98,49.65v-.03c-.62.05-1.23.06-1.85.05v.03c.61.02,1.23,0,1.85-.05Z"/>
+        <path class="wmk1" d="M37.73,48.86c-.59.19-1.18.35-1.78.48v.03c.61-.12,1.2-.29,1.79-.48v-.03h-.01Z"/>
+        <path class="wmk1" d="M41.2,47.27l-.04.02c-.52.31-1.04.59-1.58.83v.03c.57-.25,1.11-.54,1.64-.86l-.02-.03h0Z"/>
+        <path class="wmk1" d="M44.25,44.98l-.5.41c-.3.27-.6.53-.91.77l.02.03c.48-.37.94-.77,1.39-1.2h0Z"/>
+        <path class="wmk1" d="M43.15,19.63c.11.09.22.2.33.3l.14.12s.02.02.04.03l.6.53,7.49-7.44c-.79-.77-1.61-1.48-2.46-2.14l-6.41,8.36s.27.24.27.24Z"/>
+        <path class="wmk1" d="M43.66,20.08s-.02-.02-.04-.03l.04.03Z"/>
+        <path class="wmk1" d="M39.66,17.46c.12.06.24.13.36.19.28.14.55.29.82.44.13.07.26.13.38.2l5.63-8.95c-.93-.57-1.89-1.09-2.87-1.54l-4.38,9.63.05.03h0Z"/>
+        <path class="wmk1" d="M37.76,16.71l3.47-9.99c-1.04-.34-2.09-.63-3.15-.85l-2.09,10.35c.6.12,1.19.29,1.77.48h0Z"/>
+        <path class="wmk1" d="M34.02,15.94l1.13-10.5c-1.08-.1-2.17-.13-3.26-.11l.29,10.56c.61-.01,1.23,0,1.84.05Z"/>
+        <path class="wmk1" d="M29.1,16.27c.15-.03.3-.06.45-.09.21-.04.43-.1.64-.13l-1.26-10.49c-1.08.14-2.15.35-3.21.62l2.66,10.23c.24-.06.48-.09.72-.14Z"/>
+        <path class="wmk1" d="M26.48,17.01l-3.59-9.93c-1.02.38-2.02.82-2.99,1.33l4.89,9.35c.55-.29,1.12-.53,1.69-.75Z"/>
+        <path class="wmk1" d="M22.49,19.24s.03-.03.05-.04c.18-.13.35-.28.53-.41l-5.73-8.86c-.9.6-1.77,1.27-2.61,1.99l6.87,8.01c.29-.25.59-.46.9-.69h-.01Z"/>
+        <path class="wmk1" d="M22.54,19.2s-.03.03-.05.04c.02-.01.03-.03.05-.04Z"/>
+        <path class="wmk1" d="M19.31,22.35c.13-.16.26-.31.39-.47.16-.18.3-.38.46-.56l-7.58-7.34c-.76.81-1.47,1.65-2.11,2.52l8.51,6.26c.1-.14.23-.27.33-.41Z"/>
+        <path class="wmk1" d="M17.45,25.31c.08-.17.16-.34.25-.51.06-.12.11-.25.18-.36l-9.05-5.44c-.56.96-1.04,1.94-1.47,2.94l9.69,4.17c.12-.27.27-.53.4-.8Z"/>
+        <path class="wmk1" d="M16.36,27.99l-10.03-3.25c-.32,1.05-.58,2.12-.77,3.2l10.38,1.87c.11-.61.24-1.22.42-1.82Z"/>
+        <path class="wmk1" d="M15.71,33.42c-.02-.42-.01-.84,0-1.26v-.35l-10.52-.9c-.08,1.1-.09,2.2-.04,3.3l10.56-.53v-.27h0Z"/>
+        <path class="wmk1" d="M16.04,36.23c-.02-.12-.05-.24-.07-.36-.01-.06-.03-.13-.04-.19l-10.46,1.5c.17,1.08.41,2.16.71,3.22l10.16-2.9c-.12-.42-.22-.85-.3-1.27Z"/>
+        <path class="wmk1" d="M17.43,40.27c-.14-.29-.28-.58-.4-.87l-9.86,3.83c.41,1.01.89,2,1.43,2.97l9.25-5.13c-.15-.26-.29-.53-.42-.8Z"/>
+        <path class="wmk1" d="M18.94,42.76l-8.75,5.97c.63.89,1.31,1.75,2.06,2.57l7.87-7.09c-.42-.46-.82-.94-1.18-1.44h0Z"/>
+        <path class="wmk1" d="M21.55,45.6l-7.18,7.79c.83.74,1.69,1.41,2.59,2.03l6.06-8.68c-.51-.35-.99-.73-1.47-1.14Z"/>
+        <path class="wmk1" d="M24.73,47.79l-5.23,9.2c.97.53,1.96.99,2.98,1.39l3.95-9.83c-.57-.22-1.14-.47-1.69-.76h-.01Z"/>
+        <path class="wmk1" d="M28.33,49.16l-3.03,10.16c1.06.29,2.13.52,3.21.68l1.64-10.48c-.61-.09-1.22-.21-1.82-.36Z"/>
+        <path class="wmk1" d="M32.14,49.7l-.67,10.58c1.09.04,2.19.02,3.27-.07l-.76-10.56c-.61.05-1.23.06-1.85.05h0Z"/>
+        <path class="wmk1" d="M35.96,49.37l1.73,10.45c1.07-.2,2.13-.48,3.17-.81l-3.12-10.12c-.59.19-1.18.35-1.78.48Z"/>
+        <path class="wmk1" d="M39.59,48.16l4.04,9.8c.99-.44,1.96-.93,2.91-1.49l-5.33-9.17c-.53.32-1.07.6-1.63.86h0Z"/>
+        <path class="wmk1" d="M44.25,44.98c-.45.43-.91.83-1.39,1.2l6.14,8.63c.86-.65,1.69-1.35,2.49-2.12,0,0-7.24-7.71-7.24-7.71Z"/>
+      </g>
+    </g>
+  </svg>
+
+  <div class="simple-login-topmark">
+    <svg viewBox="0 0 1406.55 289.46" style="height:34px;width:auto;display:block;">
+    <g>
+        <path fill="#31006f" d="M513.53,162.09h-31.76V34.71h-47.87V2.83h127.39v31.87h-47.76v127.39Z"/>
+        <path fill="#31006f" d="M285.59,0c-45.51,0-82.41,36.89-82.41,82.41s36.89,82.41,82.41,82.41,82.41-36.89,82.41-82.41S331.1,0,285.59,0ZM285.59,133.09c-27.99,0-50.68-22.69-50.68-50.68s22.69-50.68,50.68-50.68,50.68,22.69,50.68,50.68-22.69,50.68-50.68,50.68Z"/>
+        <path fill="#31006f" d="M118.24,118.24c-19.79,19.79-51.88,19.79-71.67,0-19.79-19.79-19.79-51.88,0-71.67,19.79-19.79,51.88-19.79,71.67,0l22.44-22.44c-32.19-32.17-84.36-32.17-116.54.01-32.19,32.18-32.19,84.36,0,116.54,32.18,32.18,84.36,32.18,116.54,0,0,0-22.44-22.44-22.44-22.44Z"/>
+        <path fill="#31006f" d="M908.53,2.83l-52.31,159.26h-31.87L772.26,2.83h36.21l31.76,106.28,31.87-106.28s36.43,0,36.43,0Z"/>
+        <path fill="#31006f" d="M681.42,162.09h-31.87V2.83h31.87v159.26h0Z"/>
+        <path fill="#31006f" d="M1166.73,34.71h-47.76V2.84h127.39v31.87h-47.87v127.39h-31.76V34.71Z"/>
+        <path fill="#31006f" d="M998.84,2.83h31.87v159.26h-31.87V2.83h0Z"/>
+        <path fill="#31006f" d="M1366.32,162.09h-31.87V2.83h31.87v159.26h0Z"/>
+      </g>
+      <g>
+        <path fill="#31006f" d="M20.45,232.38H4.62v-6.11h38.2v6.11h-15.83v43.04h-6.53v-43.04h-.01Z"/>
+        <path fill="#31006f" d="M82.96,254v21.41h-6.33v-20.64c0-7.3-3.43-10.88-9.43-10.88-6.73,0-11.08,4.29-11.08,12.36v19.17h-6.33v-52.1h6.33v20.15c2.64-3.58,6.99-5.61,12.34-5.61,8.51,0,14.51,5.19,14.51,16.15h-.01Z"/>
+        <path fill="#31006f" d="M127.07,259.05h-28.37c.79,6.53,5.74,10.88,12.67,10.88,4.09,0,7.52-1.48,10.09-4.49l3.5,4.35c-3.17,3.94-7.98,6.04-13.79,6.04-11.28,0-18.8-7.93-18.8-19.03s7.45-18.95,17.55-18.95,17.29,7.72,17.29,19.17c0,.56-.06,1.41-.13,2.03h-.01ZM98.7,254.21h22.43c-.66-6.25-5.08-10.67-11.22-10.67s-10.56,4.35-11.22,10.67h.01Z"/>
+        <path fill="#31006f" d="M195.73,226.27v49.15h-6.6v-21.9h-26.52v21.9h-6.6v-49.15h6.6v21.13h26.52v-21.13h6.6Z"/>
+        <path fill="#31006f" d="M240.84,259.05h-28.37c.79,6.53,5.74,10.88,12.67,10.88,4.09,0,7.52-1.48,10.09-4.49l3.5,4.35c-3.17,3.94-7.98,6.04-13.79,6.04-11.28,0-18.8-7.93-18.8-19.03s7.45-18.95,17.55-18.95,17.29,7.72,17.29,19.17c0,.56-.06,1.41-.13,2.03h0ZM212.47,254.21h22.43c-.66-6.25-5.08-10.67-11.22-10.67s-10.56,4.35-11.22,10.67h0Z"/>
+        <path fill="#31006f" d="M277.16,252.95v22.47h-6v-4.91c-2.11,3.37-6,5.34-11.48,5.34-7.92,0-12.93-4.49-12.93-10.96,0-5.96,3.63-10.88,14.05-10.88h10.03v-1.33c0-5.69-3.1-8.99-9.37-8.99-4.16,0-8.38,1.54-11.08,4l-2.64-5.06c3.63-3.09,8.84-4.77,14.45-4.77,9.57,0,14.97,4.91,14.97,15.09h0ZM270.82,264.04v-5.19h-9.76c-6.27,0-8.05,2.6-8.05,5.76,0,3.72,2.9,6.04,7.72,6.04s8.51-2.32,10.09-6.6h0Z"/>
+        <path fill="#31006f" d="M289.6,223.32h6.33v52.1h-6.33v-52.1h0Z"/>
+        <path fill="#31006f" d="M329.2,273.24c-1.92,1.75-4.82,2.6-7.65,2.6-7.06,0-11.08-4.14-11.08-11.65v-20.44h-5.94v-5.54h5.94v-8.15h6.33v8.15h10.03v5.54h-10.03v20.16c0,4,1.98,6.25,5.47,6.25,1.85,0,3.63-.63,4.95-1.75l1.98,4.84h0Z"/>
+        <path fill="#31006f" d="M370.72,254v21.41h-6.33v-20.64c0-7.3-3.43-10.88-9.44-10.88-6.73,0-11.08,4.29-11.08,12.36v19.17h-6.33v-52.1h6.33v20.15c2.64-3.58,7-5.61,12.34-5.61,8.51,0,14.51,5.19,14.51,16.15h0Z"/>
+        <path fill="#31006f" d="M380.12,256.81c0-11.09,7.72-18.95,18.47-18.95,6.27,0,11.48,2.74,14.25,7.93l-4.81,3.3c-2.25-3.65-5.68-5.34-9.5-5.34-6.86,0-12.01,5.13-12.01,13.06s5.15,13.13,12.01,13.13c3.82,0,7.25-1.68,9.5-5.34l4.81,3.23c-2.77,5.19-7.98,8-14.25,8-10.76,0-18.47-7.93-18.47-19.03h0Z"/>
+        <path fill="#31006f" d="M449.43,252.95v22.47h-6.01v-4.91c-2.11,3.37-6.01,5.34-11.48,5.34-7.92,0-12.93-4.49-12.93-10.96,0-5.96,3.63-10.88,14.05-10.88h10.03v-1.33c0-5.69-3.1-8.99-9.37-8.99-4.15,0-8.38,1.54-11.08,4l-2.64-5.06c3.63-3.09,8.84-4.77,14.45-4.77,9.56,0,14.98,4.91,14.98,15.09h0ZM443.1,264.04v-5.19h-9.76c-6.27,0-8.05,2.6-8.05,5.76,0,3.72,2.9,6.04,7.72,6.04s8.51-2.32,10.1-6.6h-.01Z"/>
+        <path fill="#31006f" d="M480.67,237.86v6.53c-.53-.07-.99-.07-1.45-.07-6.8,0-11.02,4.42-11.02,12.57v18.54h-6.33v-37.21h6.07v6.25c2.25-4.35,6.6-6.6,12.74-6.6h-.01Z"/>
+        <path fill="#31006f" d="M520.28,259.05h-28.37c.79,6.53,5.74,10.88,12.67,10.88,4.09,0,7.52-1.48,10.09-4.49l3.5,4.35c-3.17,3.94-7.98,6.04-13.79,6.04-11.28,0-18.8-7.93-18.8-19.03s7.45-18.95,17.55-18.95,17.29,7.72,17.29,19.17c0,.56-.06,1.41-.13,2.03h-.01ZM491.91,254.21h22.43c-.66-6.25-5.08-10.67-11.22-10.67s-10.56,4.35-11.22,10.67h0Z"/>
+        <path fill="#31006f" d="M549.22,226.27h6.6v49.15h-6.6v-49.15Z"/>
+        <path fill="#31006f" d="M602.62,254v21.41h-6.33v-20.64c0-7.3-3.43-10.88-9.43-10.88-6.73,0-11.08,4.29-11.08,12.36v19.17h-6.33v-37.21h6.07v5.61c2.57-3.79,7.06-5.96,12.6-5.96,8.51,0,14.51,5.19,14.51,16.15h0Z"/>
+        <path fill="#31006f" d="M622.18,234.97v3.23h10.16v5.54h-10.03v31.67h-6.33v-31.67h-5.94v-5.54h5.94v-3.3c0-7.23,4.09-12,11.54-12,2.71,0,5.35.7,7.13,2.18l-1.92,5.13c-1.32-1.06-3.03-1.75-4.88-1.75-3.76,0-5.68,2.25-5.68,6.53v-.02Z"/>
+        <path fill="#31006f" d="M663.11,237.86v6.53c-.53-.07-.99-.07-1.45-.07-6.8,0-11.02,4.42-11.02,12.57v18.54h-6.33v-37.21h6.07v6.25c2.25-4.35,6.6-6.6,12.74-6.6h0Z"/>
+        <path fill="#31006f" d="M699.22,252.95v22.47h-6v-4.91c-2.11,3.37-6,5.34-11.48,5.34-7.92,0-12.93-4.49-12.93-10.96,0-5.96,3.63-10.88,14.05-10.88h10.03v-1.33c0-5.69-3.1-8.99-9.37-8.99-4.16,0-8.38,1.54-11.08,4l-2.64-5.06c3.63-3.09,8.84-4.77,14.45-4.77,9.57,0,14.97,4.91,14.97,15.09h0ZM692.88,264.04v-5.19h-9.76c-6.27,0-8.05,2.6-8.05,5.76,0,3.72,2.9,6.04,7.72,6.04s8.51-2.32,10.09-6.6h0Z"/>
+        <path fill="#31006f" d="M707.23,271.49l2.64-5.34c2.97,2.25,7.71,3.86,12.27,3.86,5.87,0,8.31-1.9,8.31-5.06,0-8.35-22.1-1.12-22.1-15.93,0-6.67,5.61-11.16,14.58-11.16,4.55,0,9.69,1.26,12.73,3.37l-2.7,5.34c-3.17-2.18-6.67-2.95-10.1-2.95-5.54,0-8.25,2.18-8.25,5.12,0,8.78,22.17,1.62,22.17,16.08,0,6.74-5.81,11.02-15.11,11.02-5.81,0-11.54-1.9-14.45-4.35h0Z"/>
+        <path fill="#31006f" d="M765.05,273.24c-1.91,1.75-4.81,2.6-7.65,2.6-7.06,0-11.08-4.14-11.08-11.65v-20.44h-5.94v-5.54h5.94v-8.15h6.33v8.15h10.03v5.54h-10.03v20.16c0,4,1.98,6.25,5.48,6.25,1.85,0,3.62-.63,4.94-1.75l1.98,4.84h0Z"/>
+        <path fill="#31006f" d="M792.19,237.86v6.53c-.53-.07-.99-.07-1.46-.07-6.8,0-11.02,4.42-11.02,12.57v18.54h-6.33v-37.21h6.07v6.25c2.25-4.35,6.6-6.6,12.74-6.6h0Z"/>
+        <path fill="#31006f" d="M833.71,238.21v37.21h-6v-5.62c-2.57,3.87-6.93,6.04-11.88,6.04-9.04,0-15.04-5.26-15.04-16.22v-21.41h6.33v20.64c0,7.3,3.43,10.95,9.43,10.95,6.6,0,10.82-4.35,10.82-12.35v-19.24h6.34Z"/>
+        <path fill="#31006f" d="M843.25,256.81c0-11.09,7.72-18.95,18.47-18.95,6.27,0,11.48,2.74,14.25,7.93l-4.81,3.3c-2.25-3.65-5.68-5.34-9.5-5.34-6.86,0-12.01,5.13-12.01,13.06s5.15,13.13,12.01,13.13c3.82,0,7.25-1.68,9.5-5.34l4.81,3.23c-2.77,5.19-7.98,8-14.25,8-10.76,0-18.47-7.93-18.47-19.03h0Z"/>
+        <path fill="#31006f" d="M904.97,273.24c-1.91,1.75-4.81,2.6-7.65,2.6-7.05,0-11.08-4.14-11.08-11.65v-20.44h-5.93v-5.54h5.93v-8.15h6.33v8.15h10.03v5.54h-10.03v20.16c0,4,1.98,6.25,5.48,6.25,1.85,0,3.63-.63,4.95-1.75l1.98,4.84h0Z"/>
+        <path fill="#31006f" d="M945.9,238.21v37.21h-6v-5.62c-2.57,3.87-6.93,6.04-11.88,6.04-9.04,0-15.04-5.26-15.04-16.22v-21.41h6.33v20.64c0,7.3,3.43,10.95,9.43,10.95,6.6,0,10.82-4.35,10.82-12.35v-19.24h6.34Z"/>
+        <path fill="#31006f" d="M977.47,237.86v6.53c-.53-.07-.99-.07-1.46-.07-6.8,0-11.02,4.42-11.02,12.57v18.54h-6.33v-37.21h6.07v6.25c2.25-4.35,6.6-6.6,12.74-6.6h0Z"/>
+        <path fill="#31006f" d="M1017.08,259.05h-28.37c.79,6.53,5.74,10.88,12.67,10.88,4.09,0,7.52-1.48,10.09-4.49l3.5,4.35c-3.17,3.94-7.99,6.04-13.79,6.04-11.28,0-18.8-7.93-18.8-19.03s7.45-18.95,17.55-18.95,17.28,7.72,17.28,19.17c0,.56-.06,1.41-.13,2.03h0ZM988.71,254.21h22.43c-.66-6.25-5.08-10.67-11.21-10.67s-10.56,4.35-11.22,10.67Z"/>
+        <path fill="#31006f" d="M1042.26,250.84c0-14.54,10.42-25.14,24.47-25.14,7.13,0,13.33,2.6,17.55,7.65l-4.29,4.42c-3.57-4-7.92-5.83-13-5.83-10.42,0-18.14,8-18.14,18.89s7.72,18.89,18.14,18.89c5.09,0,9.44-1.9,13-5.9l4.29,4.42c-4.22,5.06-10.43,7.72-17.62,7.72-13.99,0-24.41-10.61-24.41-25.14v.02Z"/>
+        <path fill="#31006f" d="M1088.82,256.81c0-11.09,7.72-18.95,18.21-18.95s18.14,7.86,18.14,18.95-7.65,19.03-18.14,19.03-18.21-7.93-18.21-19.03ZM1118.77,256.81c0-7.93-5.01-13.06-11.74-13.06s-11.81,5.13-11.81,13.06,5.08,13.13,11.81,13.13,11.74-5.19,11.74-13.13Z"/>
+        <path fill="#31006f" d="M1192.7,254v21.41h-6.33v-20.64c0-7.3-3.3-10.88-9.04-10.88-6.33,0-10.49,4.29-10.49,12.36v19.17h-6.33v-20.64c0-7.3-3.3-10.88-9.04-10.88-6.33,0-10.49,4.29-10.49,12.36v19.17h-6.33v-37.21h6.07v5.54c2.5-3.79,6.8-5.89,12.08-5.89s9.83,2.25,12.14,6.88c2.64-4.21,7.52-6.88,13.46-6.88,8.51,0,14.32,5.19,14.32,16.15l-.02-.02Z"/>
+        <path fill="#31006f" d="M1241.31,256.81c0,11.45-7.46,19.03-17.68,19.03-4.95,0-9.31-2.03-12.21-6.04v19.24h-6.33v-50.83h6.07v5.9c2.84-4.14,7.33-6.25,12.47-6.25,10.22,0,17.68,7.58,17.68,18.95h0ZM1234.91,256.81c0-7.86-5.08-13.06-11.8-13.06s-11.75,5.2-11.75,13.06,5.08,13.13,11.75,13.13,11.8-5.19,11.8-13.13Z"/>
+        <path fill="#31006f" d="M1278.16,252.95v22.47h-6v-4.91c-2.11,3.37-6.01,5.34-11.48,5.34-7.92,0-12.93-4.49-12.93-10.96,0-5.96,3.63-10.88,14.05-10.88h10.03v-1.33c0-5.69-3.1-8.99-9.37-8.99-4.16,0-8.38,1.54-11.08,4l-2.64-5.06c3.63-3.09,8.84-4.77,14.45-4.77,9.56,0,14.97,4.91,14.97,15.09h0ZM1271.83,264.04v-5.19h-9.76c-6.26,0-8.05,2.6-8.05,5.76,0,3.72,2.9,6.04,7.72,6.04s8.51-2.32,10.09-6.6h0Z"/>
+        <path fill="#31006f" d="M1323.79,254v21.41h-6.33v-20.64c0-7.3-3.43-10.88-9.44-10.88-6.73,0-11.08,4.29-11.08,12.36v19.17h-6.33v-37.21h6.07v5.61c2.57-3.79,7.06-5.96,12.6-5.96,8.51,0,14.51,5.19,14.51,16.15h0Z"/>
+        <path fill="#31006f" d="M1366.51,238.21l-16.96,40.93c-3.1,7.86-7.13,10.32-12.47,10.32-3.37,0-6.8-1.2-8.97-3.45l2.7-5.05c1.72,1.75,3.89,2.74,6.27,2.74,3.04,0,4.95-1.48,6.66-5.76l1.13-2.6-15.44-37.14h6.6l12.2,29.77,12.08-29.77h6.21-.01Z"/>
+      </g>
+      <g>
+        <path fill="#31006f" d="M1376.41,227.71h-6.02v-2.32h14.52v2.32h-6.02v16.33h-2.48v-16.33Z"/>
+        <path fill="#31006f" d="M1404.15,244.03l-.03-13.59-6.34,11.33h-1.16l-6.35-11.24v13.5h-2.4v-18.64h2.05l7.33,13.1,7.22-13.1h2.06l.02,18.64h-2.4Z"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="simple-login-wrap">
+    <h1 class="simple-login-heading">Enter your email to sign in</h1>
+
+    <div class="simple-field">
+      <i class="ti ti-mail"></i>
+      <input type="email" placeholder="Enter email">
+    </div>
+
+    <button class="btn-simple-continue" onclick="showApp()">Continue</button>
+
+    <p class="simple-login-foot">Don't have an account? <a href="mailto:tbd@cotiviti.com">Contact tbd@cotiviti.com</a></p>
+  </div>
+</div>
+
+
+<!-- ============ TICKETING SCREEN ============ -->
+<div class="screen" id="appScreen">
+
+  <div class="top-alert-banner critical">
+    <i class="ti ti-alert-triangle"></i>
+    <span>Critical — Claims Portal is experiencing degraded performance. Engineering is investigating.</span>
+    <button class="banner-action" onclick="showStatus();return false;">View Incident</button>
+  </div>
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-mark"><svg viewBox="0 0 55.65 65.49" fill="currentColor" style="width:58%;height:58%;"><use href="#cotiviti-mark"/></svg></div>
+      <div class="topbar-word">COTIVITI &nbsp;<span>MyCotiviti+</span></div>
+    </div>
+    <div class="topbar-nav">
+      <a class="active" href="#" onclick="showApp();return false;"><i class="ti ti-ticket" style="font-size:15px;"></i>Tickets</a>
+      <a href="#" onclick="showStatus();return false;"><i class="ti ti-activity" style="font-size:15px;"></i>App Health</a>
+    </div>
+    <div class="topbar-right">
+      <div class="user-chip"><div class="avatar">B</div>Bob <i class="ti ti-chevron-down"></i></div>
+      <a href="#" onclick="showLogin();return false;" style="font-size:12.5px;font-weight:700;color:var(--gray1);"><i class="ti ti-logout"></i> Sign out</a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v14"/></svg></div>
+        <p class="stat-label">My Tickets</p>
+        <div class="stat-value-row"><span class="stat-value">12</span><span class="stat-trend"><i class="ti ti-arrow-up"></i>+18%</span></div>
+        <p class="stat-sub">vs previous month</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <p class="stat-label">Open Tickets</p>
+        <div class="stat-value-row"><span class="stat-value">5</span><span class="stat-trend"><i class="ti ti-arrow-up"></i>+8%</span></div>
+        <p class="stat-sub">vs previous month</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <p class="stat-label">Closed Tickets</p>
+        <div class="stat-value-row"><span class="stat-value">7</span><span class="stat-trend"><i class="ti ti-arrow-up"></i>+24%</span></div>
+        <p class="stat-sub">vs previous month</p>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>My Tickets</h2>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-outline" onclick="showStatus();return false;"><i class="ti ti-activity"></i>System Status</button>
+        <button class="btn-primary"><i class="ti ti-plus"></i>Create Ticket</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <span style="font-size:12px;font-weight:700;color:var(--gray1);text-transform:uppercase;letter-spacing:.04em;">Filter Tickets</span>
+      </div>
+      <div class="filter-grid">
+        <div class="filter-field">
+          <label>Reporter</label>
+          <div class="custom-select">
+            <button type="button" class="custom-select-trigger" onclick="toggleDropdown(this)"><span class="custom-select-label">All reporters</span><i class="ti ti-chevron-down"></i></button>
+            <ul class="custom-select-menu">
+              <li class="active" onclick="selectOption(this)">All reporters</li>
+              <li onclick="selectOption(this)">Ava Whitfield</li>
+              <li onclick="selectOption(this)">Derek Osei</li>
+              <li onclick="selectOption(this)">Priya Nandan</li>
+              <li onclick="selectOption(this)">Lucas Ferreira</li>
+              <li onclick="selectOption(this)">Renee Castillo</li>
+            </ul>
+          </div>
+        </div>
+        <div class="filter-field">
+          <label>Issue Type</label>
+          <div class="custom-select">
+            <button type="button" class="custom-select-trigger" onclick="toggleDropdown(this)"><span class="custom-select-label">All types</span><i class="ti ti-chevron-down"></i></button>
+            <ul class="custom-select-menu">
+              <li class="active" onclick="selectOption(this)">All types</li>
+              <li onclick="selectOption(this)">Bug Report</li>
+              <li onclick="selectOption(this)">Feature Request</li>
+              <li onclick="selectOption(this)">Data Issue</li>
+              <li onclick="selectOption(this)">Enhancement</li>
+              <li onclick="selectOption(this)">Access Request</li>
+            </ul>
+          </div>
+        </div>
+        <div class="filter-field">
+          <label>Status</label>
+          <div class="custom-select">
+            <button type="button" class="custom-select-trigger" onclick="toggleDropdown(this)"><span class="custom-select-label">All statuses</span><i class="ti ti-chevron-down"></i></button>
+            <ul class="custom-select-menu">
+              <li class="active" onclick="selectOption(this)">All statuses</li>
+              <li onclick="selectOption(this)">Open</li>
+              <li onclick="selectOption(this)">In Progress</li>
+              <li onclick="selectOption(this)">Review</li>
+              <li onclick="selectOption(this)">Closed</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="bulk-actions-bar" id="bulkBar">
+        <span id="bulkCount">0 selected</span>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-outline" type="button"><i class="ti ti-download"></i>Download</button>
+          <button class="btn-ghost" type="button" onclick="clearSelection()">Clear</button>
+        </div>
+      </div>
+      <table class="ticket-table">
+        <tr><th style="width:1%;"><input type="checkbox" id="selectAllTickets" onchange="toggleSelectAll(this)"></th><th>Ticket ID</th><th>Sub-Ticket Type</th><th>Summary</th><th>Creation Date</th><th>Reporter</th><th>Last Updated</th><th>Status</th></tr>
+        <tr>
+          <td><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
+          <td class="ticket-id">TKT-2401</td>
+          <td class="ticket-type">Bug Report</td>
+          <td class="ticket-summary">Login page throws 500 on OAuth callback redirect</td>
+          <td>Jan 15, 2024</td><td>Ava Whitfield</td><td>Jan 16, 2024</td>
+          <td><span class="status-pill progress"><span class="g-o"></span>In Progress</span></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
+          <td class="ticket-id">TKT-2398</td>
+          <td class="ticket-type">Feature Request</td>
+          <td class="ticket-summary">Add bulk ticket assignment to workflow queue</td>
+          <td>Jan 14, 2024</td><td>Derek Osei</td><td>Jan 15, 2024</td>
+          <td><span class="status-pill open"><span class="g-o"></span>Open</span></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
+          <td class="ticket-id">TKT-2394</td>
+          <td class="ticket-type">Data Issue</td>
+          <td class="ticket-summary">Missing claims data for Q4 2023 financial reports</td>
+          <td>Jan 13, 2024</td><td>Priya Nandan</td><td>Jan 14, 2024</td>
+          <td><span class="status-pill review"><span class="g-o"></span>Review</span></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
+          <td class="ticket-id">TKT-2389</td>
+          <td class="ticket-type">Enhancement</td>
+          <td class="ticket-summary">Export to CSV with custom column field selection</td>
+          <td>Jan 12, 2024</td><td>Priya Nandan</td><td>Jan 13, 2024</td>
+          <td><span class="status-pill closed"><span class="g-o"></span>Closed</span></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
+          <td class="ticket-id">TKT-2385</td>
+          <td class="ticket-type">Bug Report</td>
+          <td class="ticket-summary">Dashboard KPI stats not refreshing on page load</td>
+          <td>Jan 11, 2024</td><td>Lucas Ferreira</td><td>Jan 12, 2024</td>
+          <td><span class="status-pill open"><span class="g-o"></span>Open</span></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
+          <td class="ticket-id">TKT-2381</td>
+          <td class="ticket-type">Access Request</td>
+          <td class="ticket-summary">Read access needed for Claims Portal module</td>
+          <td>Jan 10, 2024</td><td>Lucas Ferreira</td><td>Jan 11, 2024</td>
+          <td><span class="status-pill closed"><span class="g-o"></span>Closed</span></td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" class="row-check" onchange="updateBulkBar()"></td>
+          <td class="ticket-id">TKT-2376</td>
+          <td class="ticket-type">Bug Report</td>
+          <td class="ticket-summary">PDF export corrupts special characters in member names</td>
+          <td>Jan 09, 2024</td><td>Renee Castillo</td><td>Jan 10, 2024</td>
+          <td><span class="status-pill progress"><span class="g-o"></span>In Progress</span></td>
+        </tr>
+      </table>
+      <div class="table-foot">
+        <span>Displaying page 1 of 1 (total 7 tickets)</span>
+        <div class="pager">
+          <button>&laquo;</button><button>&lsaquo;</button>
+          <button class="current">1</button>
+          <button>&rsaquo;</button><button>&raquo;</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ============ APP HEALTH STATUS SCREEN ============ -->
+<div class="screen" id="statusScreen">
+
+  <div class="top-alert-banner critical">
+    <i class="ti ti-alert-triangle"></i>
+    <span>Critical — Claims Portal is experiencing degraded performance. Engineering is investigating.</span>
+    <button class="banner-action" onclick="showStatus();return false;">View Incident</button>
+  </div>
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-mark"><svg viewBox="0 0 55.65 65.49" fill="currentColor" style="width:58%;height:58%;"><use href="#cotiviti-mark"/></svg></div>
+      <div class="topbar-word">COTIVITI &nbsp;<span>MyCotiviti+</span></div>
+    </div>
+    <div class="topbar-nav">
+      <a href="#" onclick="showApp();return false;"><i class="ti ti-ticket" style="font-size:15px;"></i>Tickets</a>
+      <a class="active" href="#" onclick="showStatus();return false;"><i class="ti ti-activity" style="font-size:15px;"></i>App Health</a>
+    </div>
+    <div class="topbar-right">
+      <div class="user-chip"><div class="avatar">B</div>Bob <i class="ti ti-chevron-down"></i></div>
+      <a href="#" onclick="showLogin();return false;" style="font-size:12.5px;font-weight:700;color:var(--gray1);"><i class="ti ti-logout"></i> Sign out</a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg></div>
+        <p class="stat-label">Systems Monitored</p>
+        <div class="stat-value-row"><span class="stat-value">42</span></div>
+        <p class="stat-sub">across IT infrastructure</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <p class="stat-label">Operational</p>
+        <div class="stat-value-row"><span class="stat-value">38</span></div>
+        <p class="stat-sub">running normally</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <p class="stat-label">Degraded</p>
+        <div class="stat-value-row"><span class="stat-value">2</span></div>
+        <p class="stat-sub">investigating</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/></svg></div>
+        <p class="stat-label">In Maintenance</p>
+        <div class="stat-value-row"><span class="stat-value">2</span></div>
+        <p class="stat-sub">planned windows today</p>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>Application Health</h2>
+      <button class="btn-outline" onclick="showApp();return false;"><i class="ti ti-ticket"></i>Back to Tickets</button>
+    </div>
+
+    <div class="panel">
+      <div class="filter-grid">
+        <div class="filter-field">
+          <label>Status</label>
+          <div class="custom-select">
+            <button type="button" class="custom-select-trigger" onclick="toggleDropdown(this)"><span class="custom-select-label">All statuses</span><i class="ti ti-chevron-down"></i></button>
+            <ul class="custom-select-menu">
+              <li class="active" onclick="selectOption(this)">All statuses</li>
+              <li onclick="selectOption(this)">Operational</li>
+              <li onclick="selectOption(this)">Degraded</li>
+              <li onclick="selectOption(this)">Maintenance</li>
+              <li onclick="selectOption(this)">Outage</li>
+            </ul>
+          </div>
+        </div>
+        <div class="filter-field">
+          <label>Category</label>
+          <div class="custom-select">
+            <button type="button" class="custom-select-trigger" onclick="toggleDropdown(this)"><span class="custom-select-label">All categories</span><i class="ti ti-chevron-down"></i></button>
+            <ul class="custom-select-menu">
+              <li class="active" onclick="selectOption(this)">All categories</li>
+              <li onclick="selectOption(this)">Clinical &amp; Analytics</li>
+              <li onclick="selectOption(this)">Infrastructure &amp; Security</li>
+              <li onclick="selectOption(this)">Productivity &amp; Collaboration</li>
+            </ul>
+          </div>
+        </div>
+        <div class="filter-field">
+          <label>Search</label>
+          <div class="search-input-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" placeholder="Search applications...">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="ticket-table">
+        <tr><th>Application</th><th>Category</th><th>Status</th><th>Details</th></tr>
+        <tr>
+          <td class="ticket-id">Claims Portal</td>
+          <td class="ticket-type">Clinical &amp; Analytics</td>
+          <td><span class="health-status degraded"><span class="g-o"></span>Degraded</span></td>
+          <td>Last checked 2 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Network Monitor</td>
+          <td class="ticket-type">Infrastructure &amp; Security</td>
+          <td><span class="health-status degraded"><span class="g-o"></span>Degraded</span></td>
+          <td>Last checked 3 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Virtual Desktop Service</td>
+          <td class="ticket-type">Infrastructure &amp; Security</td>
+          <td><span class="health-status maintenance"><span class="g-o"></span>Maintenance</span></td>
+          <td>Window ends 2:00 PM EST</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Quality Review Engine</td>
+          <td class="ticket-type">Clinical &amp; Analytics</td>
+          <td><span class="health-status maintenance"><span class="g-o"></span>Maintenance</span></td>
+          <td>Window ends 4:00 PM EST</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Identity Service</td>
+          <td class="ticket-type">Infrastructure &amp; Security</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 1 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Issue Tracker</td>
+          <td class="ticket-type">Productivity &amp; Collaboration</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 1 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Team Wiki</td>
+          <td class="ticket-type">Productivity &amp; Collaboration</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 1 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Core Processing Engine</td>
+          <td class="ticket-type">Clinical &amp; Analytics</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 2 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Reporting Service</td>
+          <td class="ticket-type">Clinical &amp; Analytics</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 2 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Database Management Console</td>
+          <td class="ticket-type">Infrastructure &amp; Security</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 4 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Quality Dashboard</td>
+          <td class="ticket-type">Clinical &amp; Analytics</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 3 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Clinical Intelligence Platform</td>
+          <td class="ticket-type">Clinical &amp; Analytics</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 2 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Endpoint Security</td>
+          <td class="ticket-type">Infrastructure &amp; Security</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 1 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Web Application Firewall</td>
+          <td class="ticket-type">Infrastructure &amp; Security</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 1 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Productivity Suite</td>
+          <td class="ticket-type">Productivity &amp; Collaboration</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 2 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Document Workflow</td>
+          <td class="ticket-type">Clinical &amp; Analytics</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 3 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Retrieval Operations</td>
+          <td class="ticket-type">Clinical &amp; Analytics</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 3 min ago</td>
+        </tr>
+        <tr>
+          <td class="ticket-id">Rules Engine</td>
+          <td class="ticket-type">Clinical &amp; Analytics</td>
+          <td><span class="health-status operational"><span class="g-o"></span>Operational</span></td>
+          <td>Last checked 4 min ago</td>
+        </tr>
+      </table>
+      <div class="table-foot">
+        <span>Displaying page 1 of 1 (total 18 systems)</span>
+        <div class="pager">
+          <button>&laquo;</button><button>&lsaquo;</button>
+          <button class="current">1</button>
+          <button>&rsaquo;</button><button>&raquo;</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="chat-widget" id="chatWidget">
+    <div class="chat-panel">
+      <div class="chat-panel-head">
+        <div class="chat-panel-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16.5c4.14 0 7.5-2.91 7.5-6.5S16.14 3.5 12 3.5 4.5 6.41 4.5 10c0 1.6.66 3.06 1.76 4.2-.1.98-.47 1.85-1.13 2.6a5.6 5.6 0 0 0 3.1-.9c1.15.4 2.43.6 3.77.6Z"/><path d="M10.3 8.65c.2-.66.85-1.15 1.7-1.15 1 0 1.75.62 1.75 1.5 0 .75-.4 1.1-1.05 1.55-.5.35-.7.65-.7 1.15" /><circle cx="12" cy="13.6" r="0.55" fill="currentColor" stroke="none"/></svg></div>
+        <div>
+          <div class="chat-panel-title">MyCotiviti+ Support</div>
+          <div class="chat-panel-sub">Connect with our support team</div>
+        </div>
+      </div>
+      <div class="chat-panel-body">
+        <div class="chat-bubble">Welcome back, Bob. How can we help today?</div>
+      </div>
+      <div class="chat-panel-input">
+        <input type="text" placeholder="Type a message...">
+        <button class="chat-send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></button>
+      </div>
+    </div>
+    <button class="chat-toggle" onclick="toggleChat()">
+      <span class="chat-toggle-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16.5c4.14 0 7.5-2.91 7.5-6.5S16.14 3.5 12 3.5 4.5 6.41 4.5 10c0 1.6.66 3.06 1.76 4.2-.1.98-.47 1.85-1.13 2.6a5.6 5.6 0 0 0 3.1-.9c1.15.4 2.43.6 3.77.6Z"/><path d="M10.3 8.65c.2-.66.85-1.15 1.7-1.15 1 0 1.75.62 1.75 1.5 0 .75-.4 1.1-1.05 1.55-.5.35-.7.65-.7 1.15" /><circle cx="12" cy="13.6" r="0.55" fill="currentColor" stroke="none"/></svg></span>
+      <span>Chat with us</span>
+      <i class="ti ti-chevron-up"></i>
+    </button>
+  </div>
+
+<script>
+  function showScreen(id){
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+  }
+  function showApp(){ showScreen('appScreen'); }
+  function showLogin(){ showScreen('loginScreen'); }
+  function showStatus(){ showScreen('statusScreen'); }
+  function toggleChat(){
+    document.getElementById('chatWidget').classList.toggle('open');
+  }
+  function toggleDropdown(trigger){
+    var wrap = trigger.closest('.custom-select');
+    var wasOpen = wrap.classList.contains('open');
+    document.querySelectorAll('.custom-select.open').forEach(function(el){ el.classList.remove('open'); });
+    if(!wasOpen) wrap.classList.add('open');
+  }
+  function selectOption(li){
+    var wrap = li.closest('.custom-select');
+    wrap.querySelector('.custom-select-label').textContent = li.textContent.trim();
+    wrap.querySelectorAll('li').forEach(function(l){ l.classList.remove('active'); });
+    li.classList.add('active');
+    wrap.classList.remove('open');
+  }
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('.custom-select')){
+      document.querySelectorAll('.custom-select.open').forEach(function(el){ el.classList.remove('open'); });
+    }
+  });
+  function updateBulkBar(){
+    var checks = document.querySelectorAll('.row-check');
+    var checked = document.querySelectorAll('.row-check:checked').length;
+    var bar = document.getElementById('bulkBar');
+    if(!bar) return;
+    var countEl = document.getElementById('bulkCount');
+    if(checked > 0){
+      bar.style.display = 'flex';
+      countEl.textContent = checked + (checked === 1 ? ' ticket selected' : ' tickets selected');
+    } else {
+      bar.style.display = 'none';
+    }
+    var selectAll = document.getElementById('selectAllTickets');
+    if(selectAll){ selectAll.checked = checked === checks.length && checks.length > 0; }
+  }
+  function toggleSelectAll(cb){
+    document.querySelectorAll('.row-check').forEach(function(c){ c.checked = cb.checked; });
+    updateBulkBar();
+  }
+  function clearSelection(){
+    document.querySelectorAll('.row-check').forEach(function(c){ c.checked = false; });
+    var selectAll = document.getElementById('selectAllTickets');
+    if(selectAll) selectAll.checked = false;
+    updateBulkBar();
+  }
+</script>
+
+</body>
+</html>
